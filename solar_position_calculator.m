@@ -4,6 +4,7 @@
 %Delft
 Location.latitude = 51.99;
 Location.longitude = 4.35;
+Location.altitude - 0; %placeholder value
 
 %March 21, 2022
 DN = datenum(2022, 3, 21):1/(24*60):datenum(2022, 3, 21, 23, 59, 59); 
@@ -42,6 +43,7 @@ xlabel('Solar Azimuth (deg)')
 %Lima
 Location.latitude = -12.07;
 Location.longitude = -77.07;
+Location.altitude - 0; %placeholder value
 
 %March 21, 2022
 DN = datenum(2022, 3, 21):1/(24*60):datenum(2022, 3, 21, 23, 59, 59); 
