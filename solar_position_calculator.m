@@ -25,6 +25,7 @@ Time = pvl_maketimestruct(DN, 1);
 DN = datenum(2022, 9, 21):1/(24*60):datenum(2022, 9, 21, 23, 59, 59); 
 Time = pvl_maketimestruct(DN, 1);
 [SunAz4, SunE4, ApparentSunE4] = pvl_spa(Time, Location);
+
 subplot(1,2,1)
 scatter(SunAz1, SunE1, '.')
 hold all
@@ -62,6 +63,7 @@ Time = pvl_maketimestruct(DN, 1);
 DN = datenum(2022, 9, 21):1/(24*60):datenum(2022, 9, 21, 23, 59, 59); 
 Time = pvl_maketimestruct(DN, 1);
 [SunAz8, SunE8, ApparentSunE8] = pvl_spa(Time, Location);
+
 subplot(1,2,2)
 scatter(SunAz5, SunE5, '.')
 hold all
