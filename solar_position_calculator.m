@@ -1,31 +1,39 @@
-%Creating a Solar position Calculator
-%{
-The goal of this assignment is to plot sun paths for specifics dates and analemmas for
-given time instants in an arbitrary location. First, you need to be able to calculate
-the sun position (in terms of altitude/elevation/zenith and azimuth) given a time
-instant and a pair of geographical coordinates.
-%}
+%Solar Position Calculator
 
-%% ----- Base variables ------ %%
-Pressure = 101325; %Pa
-Temp = 12; %Degrees C
+%Sun Paths
+%Delft
+Location.latitude = 51.99;
+Location.longitude = 4.35;
+Location.altitude = 0;          %placeholder value
 
-%Sun location
-location.longitude = 0; %Degrees, from the equator (+ve North)
-location.latitude = 0; %Degrees, from meridian (+ve East)
+%March 21, 2022
+DN = datenum(2022, 3, 21):1/(24*60):datenum(2022, 3, 21, 23, 59, 59); 
+Time = pvl_maketimestruct(DN, 1);
+[SunAz1, SunE1, ApparentSunE1] = pvl_spa(Time, Location);
+dHr = Time.hour+Time.minute./60+Time.second./3600;
 
-%Time with reference of
-time.year = 0;
-time.day = 0;
-time.hour = 0;
-time.minute = 0;
-time.second = 0;
+%June 21, 2022
+DN = datenum(2022, 6, 21):1/(24*60):datenum(2022, 6, 21, 23, 59, 59); 
+Time = pvl_maketimestruct(DN, 1);
+[SunAz2, SunE2, ApparentSunE2] = pvl_spa(Time, Location);
 
-%% ------ Calculations ------ %%
+%December 21, 2022
+DN = datenum(2022, 12, 21):1/(24*60):datenum(2022, 12, 21, 23, 59, 59); 
+Time = pvl_maketimestruct(DN, 1);
+[SunAz3, SunE3, ApparentSunE3] = pvl_spa(Time, Location);
 
-
-
-
-%% ------ Final output ------- %%
-azimuth_ang = 0; %Degrees from North (East = 90degrees)
-elevation_ang = 0; %Degrees from the horizon (-ve is below horizon)x1
+%September 21, 2022
+DN = datenum(2022, 9, 21):1/(24*60):datenum(2022, 9, 21, 23, 59, 59); 
+Time = pvl_maketimestruct(DN, 1);
+[SunAz4, SunE4, ApparentSunE4] = pvl_spa(Time, Location);
+plot(SunAz1, SunE1)
+hold all
+plot(SunAz2, SunE2)
+plot(SunAz3, SunE3)
+plot(SunAz4, SunE4)
+ylim([0, 90])
+xlim([0,360])
+legend('Mar 21', 'Jun 21', 'Dec 21', 'Sep 21')
+title('Delft')
+ylabel('Solar Altitude (deg)')
+xlabel('Solar Azimuth (deg)')
