@@ -1,7 +1,7 @@
 clc 
 clear all
 %Panel temperature calculator, Finding Tm over time
-%Assuming Steady State
+%Assuming Steady State %Test statemebnt
 
 %% ---- Constants ---- %%
 %Model parameters
