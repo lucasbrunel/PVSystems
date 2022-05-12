@@ -2,8 +2,7 @@
 clc
 clear all
 
-
-%% Initialisation
+%% Initialisation - Test text
 
 %PV module data at STC
 Pmax = 345; %Maximum Power Point [W]
@@ -20,7 +19,22 @@ Vmp = 36.03; %Maximum Power Voltage [V]
 Isc = 7.62; %Short Circuit Current [A]
 Imp = 7.11; %Maximum Power Current [A]
 
+%Geographical data - Phoenix, Arizona
+Latitude = 33.433; %Degrees from North
+Longitude = 112.017; % Degrees from West
+Panel_tilt = 25; %Degrees, facing south.
+
+%Black Object data
+az_min = 140; %Black object azimuth limits [Degrees]
+az_max = 190;
+alt_min = 0; %Black object altitude limits [Degrees]
+alt_max = 65;
+
+
+
+
 %Environmental data
 Gm = ; %Incident irradiation on module [W/m^2]
+Gm_ref = 
 Am = ; %Module surface area [m^2]
 
