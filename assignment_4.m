@@ -2,7 +2,7 @@
 clc
 clear all
 
-%% Initialisation - Test text
+%% Initialisation
 
 %PV module data at STC
 Pmax = 345; %Maximum Power Point [W]
@@ -30,11 +30,8 @@ az_max = 190;
 alt_min = 0; %Black object altitude limits [Degrees]
 alt_max = 65;
 
-
-
-
 %Environmental data
 Gm = ; %Incident irradiation on module [W/m^2]
-Gm_ref = 
+Gm_ref = ;
 Am = ; %Module surface area [m^2]
 
