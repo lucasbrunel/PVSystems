@@ -31,10 +31,12 @@ alt_min = 0; %Black object altitude limits [Degrees]
 alt_max = 65;
 
 %Environmental data
-meteodata = readmatrix('Phoenix_AZ-hour.csv'); 
-Gm = meteodata(:,7);    %Incident irradiation on module [W/m^2]
 G_stc = 1000;      %Irradiation under STC
-%Gm_ref = ;
+meteodata = readmatrix('Phoenix_AZ-hour.csv'); 
+GHI = meteodata(:,7);    %Incident irradiation on module [W/m^2]
+DHI = meteodata(:,8);
+DNI = meteodata(:,9);
+
 Am = 1.971084; %Module surface area [m^2]
 
 %Other parameters
@@ -45,9 +47,44 @@ Ta = 25+273;    %ambient temp
 a = -3.58;  %sandia model constants
 b = -0.113;
 w = meteodata(:,12);    %wind speed
+albedo = 0.3;
 FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);
+m_azim = 0;     %module orientation
+m_tilt = 25;
+sun_azim_fix = meteodata(:,5);
+sun_azim = sun_azim_fix+180;
+sun_alt = meteodata(:,6);
+sun_Zen = 90-sun_alt;
+
+%Sky view factor
+poa_tilt = m_tilt;
+poa_azim = m_azim+180;
+ROWS = 180;
+COLS = 360;
+center_azim = repmat(linspace(0+360/(2*COLS),360-360/(2*COLS),COLS),ROWS,1);
+center_alt = repmat(linspace(90-180/(2*ROWS),-90+180/(2*ROWS),ROWS)',1,COLS);
+skyline_prof = true(size(center_azim));
+skyline_prof(center_azim>140 & center_azim<190 & center_alt>0 & center_alt<65) = false;
+svf = svfCalculator(poa_azim,poa_tilt,'skyline',skyline_prof,'plotting',true);
 
 %Calculations
+
+Gm = zeros(1,8760);
+G_dif = zeros(1,8760);
+G_ref = zeros(1,8760);
+G_dir = zeros(1,8760);
+cos_aoi = zeros(1,8760);
+
+for k=1:8760 
+    G_dif(k) = svf*DHI(k);
+    G_ref(k) = albedo*GHI(k)*((1-cosd(m_tilt))/2);
+    cos_aoi(k) = cosd(sun_Zen(k))*cosd(m_tilt)+sind(m_tilt)*sind(sun_Zen(k))*cosd(sun_azim(k)-m_azim);
+    if cos_aoi(k) < 0
+        cos_aoi(k) = 0;
+    end
+    G_dir(k) = DNI(k)*cos_aoi(k);
+    Gm(k) = G_dir(k)+G_dif(k)+G_ref(k);    
+end
 
 Tm = zeros(1,8760);
 Voc = zeros(1,8760);
@@ -62,6 +99,5 @@ for i = 1:8760
     Pmp(i) = FF*Voc(i)*Isc(i);
     
 end
-
 
 
