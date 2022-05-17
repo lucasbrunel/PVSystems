@@ -64,8 +64,8 @@ COLS = 360;
 center_azim = repmat(linspace(0+360/(2*COLS),360-360/(2*COLS),COLS),ROWS,1);
 center_alt = repmat(linspace(90-180/(2*ROWS),-90+180/(2*ROWS),ROWS)',1,COLS);
 skyline_prof = true(size(center_azim));
-skyline_prof(center_azim>140 & center_azim<190 & center_alt>0 & center_alt<65) = false;
-svf = svfCalculator(poa_azim,poa_tilt,'skyline',skyline_prof,'plotting',true);
+skyline_prof(center_azim>az_min & center_azim<az_max & center_alt>alt_min & center_alt<alt_max) = false;
+svf = svfCalculator(poa_azim,poa_tilt,'skyline',skyline_prof,'plotting',false);
 
 %Calculations
 
@@ -100,4 +100,14 @@ for i = 1:8760
     
 end
 
+Pmp(isnan(Pmp)) = 0;
+jan_DC = zeros(1,31*24);
 
+for i = 1:(31*24)
+   
+    jan_DC(i) = Pmp(i);
+
+end
+
+jan_DC_total = sum(jan_DC);
+plot(Pmp)
