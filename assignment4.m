@@ -109,14 +109,19 @@ for i = 1:8760
     Pmp(i) = Pmp(i) - Pmp(i)*T_coeff*(Tm(i)-298);   %Pmp taking into account temp coefficient
 end
 
-for i = 1:(31*24)
-   
-    jan_DC(i) = Pmp(i);
+%Split the power into 12 evenly spaced 'months'
+month_P = reshape(Pmp, 730, 12)';
+months = zeros(12,1);
+for i = 1:12
+    
+    months(i) = sum(month_P(i,:));
 
 end
 
-jan_DC_total = sum(jan_DC);
-plot(Pmp)
+bar(months)
+
+
+%plot(Pmp)
 
 %Calculate operative efficiency
 
