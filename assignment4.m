@@ -120,8 +120,8 @@ end
 
 bar(months)
 
-
-plot(Pmp)
+%Plot annual irradiance
+plot(Pmp)   
 
 %Calculate total annual DC yield
 total_DC = sum(Pmp);   %annual DC yield in W
@@ -130,4 +130,16 @@ total_DC = sum(Pmp);   %annual DC yield in W
 Eff_op = sum(Pmp)/(sum(Gm)*Am);
 
 %Annual specific yield (Wh/Wp)
-spec_yield = total_DC/(n_cells*Pmax_stc);
+spec_yield = total_DC/Pmax_stc;
+
+%Vmp/Imp
+Imp = zeros(1,8760);
+Vmp = zeros(1,8760);
+
+for i = 1:8760
+    Imp(i) = Imp_stc*(Gm(i)/1000);
+end
+
+for i = 1:8760
+    Vmp(i) = Pmp(i)/Imp(i);
+end
