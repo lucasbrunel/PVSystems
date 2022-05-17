@@ -100,12 +100,14 @@ for i = 1:8760
     
 end
 
+T_coeff = 0.004; %(decimal) percent per degree away from STC (25 degrees C)
+
 Pmp(isnan(Pmp)) = 0;
 jan_DC = zeros(1,31*24);
 
 for i = 1:(31*24)
    
-    jan_DC(i) = Pmp(i);
+    jan_DC(i) = Pmp(i) - T_coeff*(Tm(i)-298);
 
 end
 
