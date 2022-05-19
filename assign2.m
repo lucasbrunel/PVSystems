@@ -27,5 +27,6 @@ for k=1:numel(m_irradiation) % This is the only for loop you will need
     G_dir = DNI.*cos_aoi;
     m_irradiation(k) = sum(G_dir+G_dif+G_ref)/1e3;%in kWh/m2
 end
-
-contour(m_irradiation)
+M=max(m_irradiation)
+max=max(M)
+ [i,j]=find(m_irradiation==max);
