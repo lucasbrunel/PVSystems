@@ -124,7 +124,7 @@ bar(months)
 plot(Pmp)   
 
 %Calculate total annual DC yield
-total_DC = sum(Pmp);   %annual DC yield in W
+total_DC = sum(Pmp);   %annual DC yield in Wh
 
 %Calculate operative efficiency
 Eff_op = sum(Pmp)/(sum(Gm)*Am);
