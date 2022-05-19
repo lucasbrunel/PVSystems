@@ -1,11 +1,11 @@
 %Assignment 2
 
 meteodata = readmatrix('Delft-hour.csv');
-GHI = meteodata(:,7);
-DHI = meteodata(:,8);
-DNI = meteodata(:,9);
-sun_azim_fix = meteodata(:,5);
-sun_alt = meteodata(:,6);
+GHI = meteodata(8497:8520,7);
+DHI = meteodata(8497:8520,8);
+DNI = meteodata(8497:8520,9);
+sun_azim_fix = meteodata(8497:8520,5);
+sun_alt = meteodata(8497:8520,6);
 
 %%
 sun_azim = sun_azim_fix+180;  % Correction on Meteonorm's azimuth convention
