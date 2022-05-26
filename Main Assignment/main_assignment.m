@@ -1,15 +1,20 @@
-%Main Assignment 3
+%Main Assignment 3 - Team 42 - Supervisor Alba
 %Santiago, Chile, Load profile 3
-%Lat: -33.447487
-%Long: -70.673676
+clc
+clear all
 
-clear
-%Task 1 - Load Profile
+%% Variables
+% Geographical variables
+Lat = -33.447487;
+Long = -70.673676;
+
+
+%% Task 1 - Load Profile
 load_profile = getLoadProfileA3(3);
 
 %Need to make bar plot of monthly demand
 
-%Task 2 - Irradiance Calculation
+%% Task 2 - Irradiance Calculation
 meteodata = load('Santiago.mat');
 GHI = meteodata.G_Gh;
 DHI = meteodata.G_Dh;
@@ -18,10 +23,11 @@ sun_azim_fix = meteodata.Az;
 sun_alt = meteodata.hs;
 albedo = 0.15;
 
-%%
+%
 sun_azim = sun_azim_fix+180;  % Correction on Meteonorm's azimuth convention
 sun_Zen = 90-sun_alt; 	      % Correct calculation of Sun Zenith
 
+%Calculating the Irradiance on each roof orientation and tilt.
 m_azim = [0, 90, 180, 270       
           0, 90, 180, 270];
 m_tilt = [14.14111023, 14.14111023, 14.14111023, 14.14111023 
@@ -62,13 +68,13 @@ green_mount = m_irradiation_l(1,2);
 yellow_mount = m_irradiation_l(2,3);
 blue_mount = m_irradiation_l(1,4);
 
-%Task 3 - PV Module Selection
+%% Task 3 - PV Module Selection
 X_gen = 0.75;
 annual_consumption = sum(load_profile);     %Total annual consumption in Wh
 gen_req = (X_gen*annual_consumption)/1000;         %kWh
 p_system = gen_req/8760;            %kW
 total_irradiation = (green_mount+blue_mount)*(40*4*1.7)+(red_mount+yellow_mount)*(81*4*1.7);
 
-%Task 4&5 - PV System Sizing
+%% Task 4&5 - PV System Sizing
 
 
