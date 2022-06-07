@@ -32,6 +32,7 @@ load('building2020.mat','building_faces','building_vertices');
 cb_limits = [0.2 1.5];
 
 figure(1) %Portrait
+title('Portrait')
 plot3DBuildings(building_vertices,building_faces);
 roof_irradiance_p = zeros(1,8); % Calculating total Irradiance on each roof section
 for i = 1:8
@@ -124,9 +125,9 @@ for i = 1:8
         
     end
 end
-port_total = sum(roof_irradiance_p);
 
 figure(2) %Landscape
+title('Landscape')
 plot3DBuildings(building_vertices,building_faces);
 roof_irradiance_l = zeros(1,8); % Calculating total Irradiance on each roof section
 for i = 1:8
@@ -219,18 +220,17 @@ for i = 1:8
         
     end
 end
-lands_total = sum(roof_irradiance_l);
 
 
 %% Task 3 - PV Module Selection
 %Solar Tech TS60-6M3-280S 
 Pnom = 280;     %W
+Vmp = 31.9;     %Vmp [V]
+Imp = 8.8;      %Imp [A]
 eff_mod = 0.172;     %module efficiency under STC
 eff_mod_est = 0.16;         %module estimate with svf, etc
 price_mod = 0.41;      %euro/Wp
-A_mod = 1.7;        %m2
-
-%total_irradiation = (green_mount+blue_mount)*(40*4*1.7)+(red_mount+yellow_mount)*(81*4*1.7);
+A_mod = 1.64*0.992;        %m2
 
 
 %% Task 4
@@ -245,7 +245,12 @@ annual_consumption = sum(load_profile);     %Total annual consumption in Wh
 gen_req = (X_gen*annual_consumption);         %Wh
 p_system_req = (gen_req/(365*ESH*eff_system))/1e3;      %kWp
 
-%Task 5
-%System sizing
-n_module = gen_req/(1000*ESH*365*eff_system*1.7);
+%% Task 5
+%System sizing - How many panels are in series and parallel based on
+%inverter specifications.
+n_module = gen_req/(1000*ESH*365*eff_system*A_mod);
+%series = ;
+%parallel = ;
+
+%% Task 6
 
