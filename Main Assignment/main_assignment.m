@@ -20,7 +20,7 @@ sun_azim_fix = meteodata.Az;
 sun_alt = meteodata.hs;
 albedo = 0.15;
 
-% Calculations
+% Angle corrections
 sun_azim = sun_azim_fix+180;  % Correction on Meteonorm's azimuth convention
 sun_Zen = 90-sun_alt; 	      % Correct calculation of Sun Zenith
 
@@ -31,8 +31,9 @@ skyline_portrait = load('portrait_skylines.mat');
 load('building2020.mat','building_faces','building_vertices');
 cb_limits = [0.2 1.5];
 
-%figure(1) %Portrait
+figure(1) %Portrait
 plot3DBuildings(building_vertices,building_faces);
+roof_irradiance_p = zeros(1,8); % Calculating total Irradiance on each roof section
 for i = 1:8
     skyline = skyline_portrait;
     if i == 1 || i == 2 || i == 5 || i == 6
@@ -59,6 +60,7 @@ for i = 1:8
             G_dir = DNI.*cos_aoi.*sf';
             
             irrs(j) = sum(G_dir+G_dif+G_ref)/1e6;
+            roof_irradiance_p(i) = roof_irradiance_p(i) + irrs(j);
             
         end
         
@@ -88,14 +90,86 @@ for i = 1:8
             G_dir = DNI.*cos_aoi.*sf';
             
             irrs(j) = sum(G_dir+G_dif+G_ref)/1e6;
+            roof_irradiance_p(i) = roof_irradiance_p(i) + irrs(j);
             
         end
+        
         hold on
         plotModulesOnRoof('portrait_modules',s_ix,m_ix,'irradiation',irrs,cb_limits);
     end
 end
+port_total = sum(roof_irradiance_p);
 
-%Irradiance Calculation
+figure(2) %Landscape
+plot3DBuildings(building_vertices,building_faces);
+roof_irradiance_l = zeros(1,8); % Calculating total Irradiance on each roof section
+for i = 1:8
+    skyline = skyline_landscape;
+    if i == 1 || i == 2 || i == 5 || i == 6
+        s_ix = i;
+        m_ix = [1:40];
+        m_tilt = 14.14111023;
+        
+        if i == 1 || i == 5
+            m_azim = 90;
+        else
+            m_azim = 270;
+        end
+       
+        irrs = zeros(1,length(m_ix));
+        for j = 1:length(m_ix)
+            
+            %calculate yearly irradiation
+            sf = calculateShadingFactor(skyline.skylines{i, 1}{1, j}, sun_azim, sun_alt);
+            svf = svfCalculator(m_azim, m_tilt, skyline.skylines{i, 1}{1, j});
+            G_dif = svf*DHI;
+            G_ref = albedo*(1-svf)*GHI;
+            cos_aoi = cosd(sun_Zen).*cosd(m_tilt)+sind(m_tilt).*sind(sun_Zen).*cosd(sun_azim-m_azim);
+            cos_aoi(cos_aoi<0) = 0;
+            G_dir = DNI.*cos_aoi.*sf';
+            
+            irrs(j) = sum(G_dir+G_dif+G_ref)/1e6;
+            roof_irradiance_l(i) = roof_irradiance_l(i) + irrs(j);
+            
+        end
+        
+        plotModulesOnRoof('landscape_modules',s_ix,m_ix,'irradiation',irrs,cb_limits); 
+        
+    else
+        s_ix = i;
+        m_ix = [1:81];
+        m_tilt = 59.28602106;
+        
+        if i == 3 || i == 7
+            m_azim = 180;
+        else
+            m_azim = 0;
+        end
+        
+        irrs = zeros(1,length(m_ix));
+        for j = 1:length(m_ix)
+            
+            %calculate yearly irradiation
+            sf = calculateShadingFactor(skyline.skylines{i, 1}{1, j}, sun_azim, sun_alt);
+            svf = svfCalculator(m_azim, m_tilt, skyline.skylines{i, 1}{1, j});
+            G_dif = svf*DHI;
+            G_ref = albedo*(1-svf)*GHI;
+            cos_aoi = cosd(sun_Zen).*cosd(m_tilt)+sind(m_tilt).*sind(sun_Zen).*cosd(sun_azim-m_azim);
+            cos_aoi(cos_aoi<0) = 0;
+            G_dir = DNI.*cos_aoi.*sf';
+            
+            irrs(j) = sum(G_dir+G_dif+G_ref)/1e6;
+            roof_irradiance_l(i) = roof_irradiance_l(i) + irrs(j);
+            
+        end
+        
+        hold on
+        plotModulesOnRoof('landscape_modules',s_ix,m_ix,'irradiation',irrs,cb_limits);
+    end
+end
+lands_total = sum(roof_irradiance_l);
+
+% %Irradiance Calculation
 % m_azim = [0, 90, 180, 270       
 %           0, 90, 180, 270];
 % m_tilt = [14.14111023, 14.14111023, 14.14111023, 14.14111023 
@@ -104,7 +178,7 @@ end
 % m_irradiation_p = zeros(size(m_tilt));
 % skyline_landscape = load('landscape_skylines.mat');
 % skyline_portrait = load('portrait_skylines.mat');
-
+% 
 % for i = 1:2
 %     if i == 1
 %         skyline = skyline_landscape;
@@ -128,16 +202,21 @@ end
 %         end
 %     end
 % end
-
+% 
 % red_mount_l = m_irradiation_l(2,1);
 % green_mount_l = m_irradiation_l(1,2);
 % yellow_mount_l = m_irradiation_l(2,3);
 % blue_mount_l = m_irradiation_l(1,4);
 % 
+% landscapenis = red_mount_l + green_mount_l + yellow_mount_l + blue_mount_l
+% 
 % red_mount_p = m_irradiation_p(2,1);
 % green_mount_p = m_irradiation_p(1,2);
 % yellow_mount_p = m_irradiation_p(2,3);
 % blue_mount_p = m_irradiation_p(1,4);
+% 
+% portrate = red_mount_p + green_mount_p + yellow_mount_p + blue_mount_p
+
 
 %% Task 3 - PV Module Selection
 %Solar Tech TS60-6M3-280S 
