@@ -71,6 +71,7 @@ Pnom = 280;     %W
 eff_mod = 0.172;     %module efficiency under STC
 eff_mod_est = 0.16;         %module estimate with svf, etc
 price_mod = 0.41;      %euro/Wp
+A_mod = 1.7;        %m2
 
 %total_irradiation = (green_mount+blue_mount)*(40*4*1.7)+(red_mount+yellow_mount)*(81*4*1.7);
 
@@ -84,8 +85,10 @@ eff_system = eff_mod_est*eff_inv*eff_cable;
 ESH = (sum(GHI)/(1000*8760))*24;    %ESH in Santiago, Chile
 X_gen = 0.75;    
 annual_consumption = sum(load_profile);     %Total annual consumption in Wh
-gen_req = (X_gen*annual_consumption);         %kWh
-p_system_req = gen_req/(365*ESH);       %kW/m2
-%p_system = p_system_req/(eff_system);
-n_modules = p_system_req/Pnom;
+gen_req = (X_gen*annual_consumption);         %Wh
+p_system_req = (gen_req/(365*ESH*eff_system))/1e3;      %kWp
+
+%Task 5
+%System sizing
+n_module = gen_req/(1000*ESH*365*eff_system*1.7);
 
