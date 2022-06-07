@@ -65,7 +65,19 @@ for i = 1:8
         end
         
         plotModulesOnRoof('portrait_modules',s_ix,m_ix,'irradiation',irrs,cb_limits); 
-        
+        if i==1
+            irr_1_p=zeros(1,length(irrs));
+            irr_1_p=sum(irrs)/length(irrs);
+        elseif i==2
+            irr_2_p=zeros(1,length(irrs));
+            irr_2_p=sum(irrs)/length(irrs);
+        elseif i==5
+            irr_5_p=zeros(1,length(irrs));
+            irr_5_p=sum(irrs)/length(irrs);
+        else
+            irr_6_p=zeros(1,length(irrs));
+            irr_6_p=sum(irrs)/length(irrs);
+        end
     else
         s_ix = i;
         m_ix = [1:80];
@@ -96,6 +108,20 @@ for i = 1:8
         
         hold on
         plotModulesOnRoof('portrait_modules',s_ix,m_ix,'irradiation',irrs,cb_limits);
+         if i==3
+            irr_3_p=zeros(1,length(irrs));
+            irr_3_p=sum(irrs)/length(irrs);
+        elseif i==4
+            irr_4_p=zeros(1,length(irrs));
+            irr_4_p=sum(irrs)/length(irrs);
+        elseif i==7
+            irr_7_p=zeros(1,length(irrs));
+            irr_7_p=sum(irrs)/length(irrs);
+        else
+            irr_8_p=zeros(1,length(irrs));
+            irr_8_p=sum(irrs)/length(irrs);
+        end
+        
     end
 end
 port_total = sum(roof_irradiance_p);
@@ -134,7 +160,19 @@ for i = 1:8
         end
         
         plotModulesOnRoof('landscape_modules',s_ix,m_ix,'irradiation',irrs,cb_limits); 
-        
+        if i==1
+            irr_1_l=zeros(1,length(irrs));
+            irr_1_l=sum(irrs)/length(irrs);
+        elseif i==2
+            irr_2_l=zeros(1,length(irrs));
+            irr_2_l=sum(irrs)/length(irrs);
+        elseif i==5
+            irr_5_l=zeros(1,length(irrs));
+            irr_5_l=sum(irrs)/length(irrs);
+        else
+            irr_6_l=zeros(1,length(irrs));
+            irr_6_l=sum(irrs)/length(irrs);
+        end
     else
         s_ix = i;
         m_ix = [1:81];
@@ -165,6 +203,20 @@ for i = 1:8
         
         hold on
         plotModulesOnRoof('landscape_modules',s_ix,m_ix,'irradiation',irrs,cb_limits);
+         if i==3
+            irr_3_l=zeros(1,length(irrs));
+            irr_3_l=sum(irrs)/length(irrs);
+        elseif i==4
+            irr_4_l=zeros(1,length(irrs));
+            irr_4_l=sum(irrs)/length(irrs);
+        elseif i==7
+            irr_7_l=zeros(1,length(irrs));
+            irr_7_l=sum(irrs)/length(irrs);
+        else
+            irr_8_l=zeros(1,length(irrs));
+            irr_8_l=sum(irrs)/length(irrs);
+        end
+        
     end
 end
 lands_total = sum(roof_irradiance_l);
