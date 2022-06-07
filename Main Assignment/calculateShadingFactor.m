@@ -11,8 +11,8 @@ function sf = calculateShadingFactor(skyline,sun_azim,sun_alt)
 % Calculate if the sun is blocked from the perspective of the first module
 % on the first roof sector when the sun As=180 and as=39 and also when 
 % As=170 and as=20;
-% load('portrait_skylines.mat')
-% sf = calculateShadingFactor(skylines{1}{1},[180 170],[39 20])
+%load('portrait_skylines.mat')
+%sf = calculateShadingFactor(skylines{1}{1},[180 170],[39 20])
 
 if numel(sun_alt) ~= numel(sun_azim)
     error('Solar azimuth and solar altitude vectors are not the same size')
