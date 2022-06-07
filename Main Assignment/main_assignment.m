@@ -35,12 +35,12 @@ cb_limits = [0.2 1.5];
 plot3DBuildings(building_vertices,building_faces);
 for i = 1:8
     skyline = skyline_portrait;
-    if i == 1 || 2 || 5 || 6
+    if i == 1 || i == 2 || i == 5 || i == 6
         s_ix = i;
         m_ix = [1:36];
         m_tilt = 14.14111023;
         
-        if i == 1 || 5
+        if i == 1 || i == 5
             m_azim = 90;
         else
             m_azim = 270;
@@ -69,7 +69,7 @@ for i = 1:8
         m_ix = [1:80];
         m_tilt = 59.28602106;
         
-        if i == 3 || 7
+        if i == 3 || i == 7
             m_azim = 180;
         else
             m_azim = 0;
@@ -100,8 +100,8 @@ end
 %           0, 90, 180, 270];
 % m_tilt = [14.14111023, 14.14111023, 14.14111023, 14.14111023 
 %           59.28602106, 59.28602106, 59.28602106, 59.28602106];
-m_irradiation_l = zeros(size(m_tilt));
-m_irradiation_p = zeros(size(m_tilt));
+% m_irradiation_l = zeros(size(m_tilt));
+% m_irradiation_p = zeros(size(m_tilt));
 % skyline_landscape = load('landscape_skylines.mat');
 % skyline_portrait = load('portrait_skylines.mat');
 
