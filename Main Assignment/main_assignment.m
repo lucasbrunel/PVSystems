@@ -4,12 +4,12 @@
 %Long: -70.673676
 
 clear
-%Task 1 - Load Profile
-load_profile = getLoadProfileA3(3);
+%% Task 1 - Load Profile
+load_profile = getLoadProfileA3(3,true); %Plots the load
 
-%Need to make bar plot of monthly demand
 
-%Task 2 - Irradiance Calculation
+%% Task 2 - Irradiance Calculation
+% Variables
 meteodata = load('Santiago.mat');
 GHI = meteodata.G_Gh;
 DHI = meteodata.G_Dh;
@@ -18,7 +18,7 @@ sun_azim_fix = meteodata.Az;
 sun_alt = meteodata.hs;
 albedo = 0.15;
 
-%%
+% Calculations
 sun_azim = sun_azim_fix+180;  % Correction on Meteonorm's azimuth convention
 sun_Zen = 90-sun_alt; 	      % Correct calculation of Sun Zenith
 
@@ -65,7 +65,7 @@ green_mount_p = m_irradiation_p(1,2);
 yellow_mount_p = m_irradiation_p(2,3);
 blue_mount_p = m_irradiation_p(1,4);
 
-%Task 3 - PV Module Selection
+%% Task 3 - PV Module Selection
 %Solar Tech TS60-6M3-280S 
 Pnom = 280;     %W
 eff_mod = 0.172;     %module efficiency under STC
@@ -75,7 +75,7 @@ price_mod = 0.41;      %euro/Wp
 %total_irradiation = (green_mount+blue_mount)*(40*4*1.7)+(red_mount+yellow_mount)*(81*4*1.7);
 
 
-%Task 4
+%% Task 4
 %System Losses
 eff_inv = 0.91;
 eff_cable = 0.99;
