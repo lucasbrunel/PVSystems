@@ -225,8 +225,10 @@ end
 %% Task 3 - PV Module Selection
 %Solar Tech TS60-6M3-280S 
 Pnom = 280;     %W
-Vmp = 31.9;     %Vmp [V]
-Imp = 8.8;      %Imp [A]
+Vmp_stc = 31.9;     %Vmp [V]
+Imp_stc = 8.8;      %Imp [A]
+Voc_stc = 39.56;    %V
+Isc_stc = 9.46;     %A
 eff_mod = 0.172;     %module efficiency under STC
 eff_mod_est = 0.16;         %module estimate with svf, etc
 price_mod = 0.41;      %euro/Wp
@@ -248,9 +250,33 @@ p_system_req = (gen_req/(365*ESH*eff_system))/1e3;      %kWp
 %% Task 5
 %System sizing - How many panels are in series and parallel based on
 %inverter specifications.
-n_module = gen_req/(1000*ESH*365*eff_system*A_mod);
+n_mod = ceil(gen_req/(1000*ESH*365*eff_system*A_mod));
 %series = ;
 %parallel = ;
 
 %% Task 6
+%DC yield calculation
+%constants
+k_b = 1.38e-23; %boltzmann
+n = 1.2;    %ideality factor (CHECK THIS)
+k_b = 1.38e-23; %boltzmann
+q = 1.6e-19;     %charge e-
+Ta = 25+273;    %ambient temp
+FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);
+Tm = 20+273;      %PLACEHOLDER - use sandia model to calculate?
+k = -0.0035;        %(degrees C)^-1 (for c-Si)
+
+%calculations
+G_aoi = irr_1_p*1e6;       %PLACEHOLDER - should be exact irradiation on selected modules
+                           %calculate average irradiation on all modules selected?
+G_stc = 1000*8760;      %Wh/m2
+Isc_25C = Isc_stc*(G_aoi/G_stc);    %A
+Voc_25C = Voc_stc + ((n*k_b*Ta)/q)*log(G_aoi/G_stc)*n_mod;       %V
+Pmpp_25C = FF*Voc_25C*Isc_25C;      %W
+eff_25C = Pmpp_25C/(A_mod*G_aoi);   %efficiency at 25 C
+eff_Tm = eff_25C*(1 + k*(Tm - Ta)); %efficiency at module temp
+P_DC = eff_Tm*A_mod*G_aoi;          %annual DC output before BoS [W]
+P_STC = 1000*A_mod;                %W
+DCY = P_DC/P_STC;
+
 
