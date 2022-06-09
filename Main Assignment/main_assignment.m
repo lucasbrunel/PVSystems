@@ -15,7 +15,7 @@ load_profile = getLoadProfileA3(3); %Plots the load
 meteodata = load('Santiago.mat');
 GHI = meteodata.G_Gh;   %Global horizontal Irradiance
 DHI = meteodata.G_Dh;   %Diffuse horizontal Irradiance
-DNI = meteodata.G_Bh;   %Global Direct Irradiance
+DNI = meteodata.G_Bh;   %Direct normal irradiance
 sun_azim_fix = meteodata.Az;
 sun_alt = meteodata.hs;
 albedo = 0.15;
@@ -31,8 +31,8 @@ skyline_portrait = load('portrait_skylines.mat');
 load('building2020.mat','building_faces','building_vertices');
 cb_limits = [0.2 1.5];
 
-figure(1) %Portrait
-title('Portrait')
+%Portrait
+%title('Portrait')
 plot3DBuildings(building_vertices,building_faces);
 roof_irradiance_p = zeros(1,8); % Calculating total Irradiance on each roof section
 for i = 1:8
@@ -53,7 +53,7 @@ for i = 1:8
             
             %calculate yearly irradiation
             sf = calculateShadingFactor(skyline.skylines{i, 1}{1, j}, sun_azim, sun_alt);
-            svf = svfCalculator(m_azim, m_tilt, skyline.skylines{i, 1}{1, j});
+            svf = skyline.svf{i,1}(j,1);
             G_dif = svf*DHI;
             G_ref = albedo*(1-svf)*GHI;
             cos_aoi = cosd(sun_Zen).*cosd(m_tilt)+sind(m_tilt).*sind(sun_Zen).*cosd(sun_azim-m_azim);
@@ -67,16 +67,12 @@ for i = 1:8
         
         plotModulesOnRoof('portrait_modules',s_ix,m_ix,'irradiation',irrs,cb_limits); 
         if i==1
-            irr_1_p=zeros(1,length(irrs));
             irr_1_p=sum(irrs)/length(irrs);
         elseif i==2
-            irr_2_p=zeros(1,length(irrs));
             irr_2_p=sum(irrs)/length(irrs);
         elseif i==5
-            irr_5_p=zeros(1,length(irrs));
             irr_5_p=sum(irrs)/length(irrs);
         else
-            irr_6_p=zeros(1,length(irrs));
             irr_6_p=sum(irrs)/length(irrs);
         end
     else
@@ -95,7 +91,7 @@ for i = 1:8
             
             %calculate yearly irradiation
             sf = calculateShadingFactor(skyline.skylines{i, 1}{1, j}, sun_azim, sun_alt);
-            svf = svfCalculator(m_azim, m_tilt, skyline.skylines{i, 1}{1, j});
+            svf = skyline.svf{i,1}(j,1);
             G_dif = svf*DHI;
             G_ref = albedo*(1-svf)*GHI;
             cos_aoi = cosd(sun_Zen).*cosd(m_tilt)+sind(m_tilt).*sind(sun_Zen).*cosd(sun_azim-m_azim);
@@ -110,26 +106,23 @@ for i = 1:8
         hold on
         plotModulesOnRoof('portrait_modules',s_ix,m_ix,'irradiation',irrs,cb_limits);
          if i==3
-            irr_3_p=zeros(1,length(irrs));
             irr_3_p=sum(irrs)/length(irrs);
         elseif i==4
-            irr_4_p=zeros(1,length(irrs));
             irr_4_p=sum(irrs)/length(irrs);
         elseif i==7
-            irr_7_p=zeros(1,length(irrs));
             irr_7_p=sum(irrs)/length(irrs);
-        else
-            irr_8_p=zeros(1,length(irrs));
+         else
             irr_8_p=sum(irrs)/length(irrs);
         end
         
     end
 end
 
-figure(2) %Landscape
-title('Landscape')
+%Landscape
+%title('Landscape')
 plot3DBuildings(building_vertices,building_faces);
 roof_irradiance_l = zeros(1,8); % Calculating total Irradiance on each roof section
+svf_check = zeros(1,40);
 for i = 1:8
     skyline = skyline_landscape;
     if i == 1 || i == 2 || i == 5 || i == 6
@@ -148,7 +141,10 @@ for i = 1:8
             
             %calculate yearly irradiation
             sf = calculateShadingFactor(skyline.skylines{i, 1}{1, j}, sun_azim, sun_alt);
-            svf = svfCalculator(m_azim, m_tilt, skyline.skylines{i, 1}{1, j});
+            svf = skyline.svf{i,1}(j,1);
+            if i == 1
+               svf_check(j) = svf;
+            end
             G_dif = svf*DHI;
             G_ref = albedo*(1-svf)*GHI;
             cos_aoi = cosd(sun_Zen).*cosd(m_tilt)+sind(m_tilt).*sind(sun_Zen).*cosd(sun_azim-m_azim);
@@ -162,16 +158,15 @@ for i = 1:8
         
         plotModulesOnRoof('landscape_modules',s_ix,m_ix,'irradiation',irrs,cb_limits); 
         if i==1
-            irr_1_l=zeros(1,length(irrs));
-            irr_1_l=sum(irrs)/length(irrs);
+            %irr_1_l=sum(irrs)/length(irrs);
+            irr_1_l = irrs;
         elseif i==2
-            irr_2_l=zeros(1,length(irrs));
-            irr_2_l=sum(irrs)/length(irrs);
+            %irr_2_l=sum(irrs)/length(irrs);
+            irr_2_l = irrs;
         elseif i==5
             irr_5_l=zeros(1,length(irrs));
             irr_5_l=sum(irrs)/length(irrs);
         else
-            irr_6_l=zeros(1,length(irrs));
             irr_6_l=sum(irrs)/length(irrs);
         end
     else
@@ -190,7 +185,7 @@ for i = 1:8
             
             %calculate yearly irradiation
             sf = calculateShadingFactor(skyline.skylines{i, 1}{1, j}, sun_azim, sun_alt);
-            svf = svfCalculator(m_azim, m_tilt, skyline.skylines{i, 1}{1, j});
+            svf = skyline.svf{i,1}(j,1);
             G_dif = svf*DHI;
             G_ref = albedo*(1-svf)*GHI;
             cos_aoi = cosd(sun_Zen).*cosd(m_tilt)+sind(m_tilt).*sind(sun_Zen).*cosd(sun_azim-m_azim);
@@ -205,16 +200,12 @@ for i = 1:8
         hold on
         plotModulesOnRoof('landscape_modules',s_ix,m_ix,'irradiation',irrs,cb_limits);
          if i==3
-            irr_3_l=zeros(1,length(irrs));
             irr_3_l=sum(irrs)/length(irrs);
         elseif i==4
-            irr_4_l=zeros(1,length(irrs));
             irr_4_l=sum(irrs)/length(irrs);
         elseif i==7
-            irr_7_l=zeros(1,length(irrs));
             irr_7_l=sum(irrs)/length(irrs);
-        else
-            irr_8_l=zeros(1,length(irrs));
+         else
             irr_8_l=sum(irrs)/length(irrs);
         end
         
@@ -262,7 +253,7 @@ n = 1.2;    %ideality factor (CHECK THIS)
 k_b = 1.38e-23; %boltzmann
 q = 1.6e-19;     %charge e-
 Ta = 25+273;    %ambient temp
-FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);
+FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);   %fill factor
 Tm = 20+273;      %PLACEHOLDER - use sandia model to calculate?
 k = -0.0035;        %(degrees C)^-1 (for c-Si)
 
