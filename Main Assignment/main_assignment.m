@@ -15,10 +15,20 @@ load_profile = getLoadProfileA3(3); %Plots the load
 meteodata = load('Santiago.mat');
 GHI = meteodata.G_Gh;   %Global horizontal Irradiance
 DHI = meteodata.G_Dh;   %Diffuse horizontal Irradiance
-DNI = meteodata.G_Bh;   %Direct normal irradiance
+%DNI = meteodata.G_Bh;   %Direct normal irradiance
+meteodata2 = importdata('Santiago-hour.dat');
+DNI = meteodata2(:,9);
 sun_azim_fix = meteodata.Az;
 sun_alt = meteodata.hs;
 albedo = 0.15;
+% DNI = zeros(8760,1);
+% for i = 1:8760
+%     if sun_alt(i) > 0
+%         DNI(i) = (GHI(i)-DHI(i))./sind(sun_alt(i));
+%     else
+%         DNI(i) = 0;
+%     end
+% end
 
 % Angle corrections
 sun_azim = sun_azim_fix+180;  % Correction on Meteonorm's azimuth convention
