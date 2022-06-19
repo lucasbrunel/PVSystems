@@ -39,7 +39,7 @@ landscape_modules = load('landscape_modules.mat');
 skyline_landscape = load('landscape_skylines.mat');
 skyline_portrait = load('portrait_skylines.mat');
 load('building2020.mat','building_faces','building_vertices');
-cb_limits = [0.2 1.5];
+cb_limits = [1.0 1.3];
 
 %Portrait
 %title('Portrait')
@@ -131,6 +131,9 @@ end
 %Landscape
 %title('Landscape')
 plot3DBuildings(building_vertices,building_faces);
+%irradiance_perhour_l1 = zeros(40,8760);
+%irradiance_perhour_l2 = zeros(40,8760);
+%irrs_perhour = zeros(1,8760);
 roof_irradiance_l = zeros(1,8); % Calculating total Irradiance on each roof section
 svf_check = zeros(1,40);
 for i = 1:8
@@ -161,7 +164,7 @@ for i = 1:8
             cos_aoi(cos_aoi<0) = 0;
             G_dir = DNI.*cos_aoi.*sf';
             
-            irrs(j) = sum(G_dir+G_dif+G_ref)/1e6;
+            irrs(j) = sum(G_dir+G_dif+G_ref)/1e6;    
             roof_irradiance_l(i) = roof_irradiance_l(i) + irrs(j);
             
         end
