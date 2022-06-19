@@ -1,8 +1,9 @@
 %Cable Caluculation
 
+%% DC cables
 Isc = 9.46;
 Voc = 39.56;
-Pdc = 1.87e7; %Wh
+Pdc = 1.87e7; % Wh
 
 Th = 35.3; %Max Ambient Temperature; [C]
 T0 = 33; %Correction factor (adder) for sun exposed cable [C]
@@ -24,10 +25,11 @@ Ltot = LcableMM + LcableStrStr; % Total length of cabling required
 Imax = Isc*Nstr*1.25*1.25; % Max current which can occur with safety factors.
 Vmax = Voc*Nm; % Max voltage which can occur in the system
 
-sigma_Cu = 59.6; %Conductivity of copper [S m / mm^2]
-sigma_Al = 35.5; %Conductivity of aluminium [S m / mm^2]
+sigma_Cu = 59.6; % Conductivity of copper [S m / mm^2]
+sigma_Al = 35.5; % Conductivity of aluminium [S m / mm^2]
 
-A = [4,6,10,16]; % Cross sectional area of cable [mm^2]
+%A = [4,6,10,16]; % Cross sectional area of cable [mm^2]
+A = 10;
 
 R_Cu = 1/sigma_Cu * Ltot./A; % Resistance of Copper cable [Ohms]
 R_Al = 1/sigma_Al * Ltot./A; % Resistance of Aluminium cable [Ohms]
@@ -37,3 +39,7 @@ Ploss_Al = R_Al * Imax^2;
 
 eff_Cu = Pdc./(Pdc+Ploss_Al);
 eff_Al = Pdc./(Pdc+Ploss_Al);
+
+%% AC cables
+
+L_ac = 100; %[m] of cable from inverter to AC grid connection
