@@ -1,13 +1,12 @@
 %% Task 2 - Irradiance Calculation
 % Variables
 meteodata = load('Santiago.mat');
-GHI = meteodata.G_Gh;   %Global horizontal Irradiance
-DHI = meteodata.G_Dh;   %Diffuse horizontal Irradiance
-%DNI = meteodata.G_Bh;   %Direct normal irradiance
 meteodata2 = importdata('Santiago-hour.dat');
+GHI = meteodata2(:,7);   %Global horizontal Irradiance
+DHI = meteodata2(:,8);   %Diffuse horizontal Irradiance
 DNI = meteodata2(:,9);
-sun_azim_fix = meteodata.Az;
-sun_alt = meteodata.hs;
+sun_azim_fix = meteodata2(:,5);
+sun_alt = meteodata2(:,6);
 albedo = 0.15;
 
 % Angle corrections
@@ -109,7 +108,94 @@ for i = 1:40
     end
 end
 
-T_m_avg=zeros(1,8760);
-for t=1:8760
-    T_m_avg(t)=(sum(T_m1(t,:),1)+sum(T_m2(t,:),1))/80;
+%Solar Tech TS60-6M3-280S 
+Pnom = 280;     %W
+Vmp_stc = 31.9;     %Vmp [V]
+Imp_stc = 8.8;      %Imp [A]
+Voc_stc = 39.56;    %V
+Isc_stc = 9.46;     %A
+eff_mod = 0.172;     %module efficiency under STC
+eff_mod_est = 0.16;         %module estimate with svf, etc
+price_mod = 0.41;      %euro/Wp
+A_mod = 1.64*0.992;        %m2
+
+%DC yield calculation
+%constants
+n = 1.2;    %ideality factor (CHECK THIS)
+k_b = 1.38e-23; %boltzmann
+q = 1.6e-19;     %charge e-
+Ta = 25;    %ambient temp [degrees C]
+FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);   %fill factor
+k = -0.0035;        %(degrees C)^-1 (for c-Si)
+G_stc = 1000;      %W/m2
+
+%calculations
+%P_DC at actual module temp
+P_DC1 = zeros(40,8760);
+P_DC2 = zeros(40,8760);
+P_DC1_25C = zeros(40,8760);
+P_DC2_25C = zeros(40,8760);
+
+for i = 1:2
+    if i == 1
+        Tm = T_m1;
+        G_aoi = irradiance_perhour_l1;
+    else
+        Tm = T_m2;
+        G_aoi = irradiance_perhour_l2;
+    end
+    for j = 1:40
+        for t = 1:8760
+            Isc_25C = Isc_stc*(G_aoi(j,t)/G_stc);    %A
+            if G_aoi(j,t) == 0
+                Voc_25C = Voc_stc;
+            else
+                Voc_25C = Voc_stc + ((n*k_b*Ta)/q)*log(G_aoi(j,t)/G_stc)*n_mod;       %V
+            end
+            Pmpp_25C = FF*Voc_25C*Isc_25C;      %W
+            eff_25C = max(Pmpp_25C/(A_mod*G_aoi(j,t)),0);   %efficiency at 25 C
+            eff_Tm = eff_25C*(1 + k*(Tm(j,t) - Ta)); %efficiency at module temp
+            if i == 1
+                P_DC1(j,t) = eff_Tm*A_mod*G_aoi(j,t);          %DC output before BoS [W]
+                P_DC1_25C(j,t) = eff_25C*A_mod*G_aoi(j,t);
+            else
+                P_DC2(j,t) = eff_Tm*A_mod*G_aoi(j,t); 
+                P_DC2_25C(j,t) = eff_25C*A_mod*G_aoi(j,t);
+            end
+        end
+    end
+end
+
+P_DC_tot = zeros(1,8760);
+roof2_mat = zeros(1,40);
+roof2_mat(6) = 1;
+roof2_mat(11) = 1;
+roof2_mat(16) = 1;
+roof2_mat(21) = 1;
+roof2_mat(26) = 1;
+roof2_mat(31) = 1;
+roof2_mat(36) = 1;
+roof2_mat(7) = 1;
+roof2_mat(12) = 1;
+roof2_mat(17) = 1;
+roof2_mat(22) = 1;
+roof2_mat(27) = 1;
+roof2_mat(32) = 1;
+roof2_mat(37) = 1;
+for t = 1:8760
+    P_DC_tot = sum(P_DC1,1) + sum(roof2_mat*P_DC2,1);
+end
+P_DC_annual = sum(P_DC_tot);
+
+P_DC_tot_25C = zeros(1,8760);
+for t = 1:8760
+    P_DC_tot_25C = sum(P_DC1_25C,1) + sum(roof2_mat*P_DC2,1);
+end
+P_DC_annual_25C = sum(P_DC_tot_25C);
+
+maxi_count = 0;
+for t = 1:8760
+    if irradiance_perhour_l1(1,t) > 1000
+        maxi_count = maxi_count + 1;
+    end
 end
