@@ -12,14 +12,16 @@ load_profile = getLoadProfileA3(3); %Plots the load
 
 %% Task 2 - Irradiance Calculation
 % Variables
-meteodata = load('Santiago.mat');
-GHI = meteodata.G_Gh;   %Global horizontal Irradiance
-DHI = meteodata.G_Dh;   %Diffuse horizontal Irradiance
+%meteodata = load('Santiago.mat');
+%GHI = meteodata.G_Gh;   %Global horizontal Irradiance
+%DHI = meteodata.G_Dh;   %Diffuse horizontal Irradiance
 %DNI = meteodata.G_Bh;   %Direct normal irradiance
 meteodata2 = importdata('Santiago-hour.dat');
+GHI = meteodata2(:,7);   %Global horizontal Irradiance
+DHI = meteodata2(:,8);   %Diffuse horizontal Irradiance
 DNI = meteodata2(:,9);
-sun_azim_fix = meteodata.Az;
-sun_alt = meteodata.hs;
+sun_azim_fix = meteodata2(:,5);
+sun_alt = meteodata2(:,6);
 albedo = 0.15;
 % DNI = zeros(8760,1);
 % for i = 1:8760
@@ -261,26 +263,43 @@ n_mod = ceil(gen_req/(1000*ESH*365*eff_system*A_mod));
 %% Task 6
 %DC yield calculation
 %constants
-k_b = 1.38e-23; %boltzmann
-n = 1.2;    %ideality factor (CHECK THIS)
-k_b = 1.38e-23; %boltzmann
-q = 1.6e-19;     %charge e-
-Ta = 25+273;    %ambient temp
-FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);   %fill factor
-Tm = 20+273;      %PLACEHOLDER - use sandia model to calculate?
-k = -0.0035;        %(degrees C)^-1 (for c-Si)
+% k_b = 1.38e-23; %boltzmann
+% n = 1.2;    %ideality factor (CHECK THIS)
+% k_b = 1.38e-23; %boltzmann
+% q = 1.6e-19;     %charge e-
+% Ta = 25+273;    %ambient temp
+% FF = (Imp_stc*Vmp_stc)/(Isc_stc*Voc_stc);   %fill factor
+% k = -0.0035;        %(degrees C)^-1 (for c-Si)
+% G_stc = 1000*8760;      %Wh/m2
+% 
+% %calculations
+% P_DC1 = zeros(40,8760);
+% P_DC2 = zeros(40,8760);
+% 
+% for i = 1:2
+%     if i == 1
+%         Tm = T_m1;
+%         G_aoi = irradiance_perhour_l1;
+%     else
+%         Tm = T_m2;
+%         G_aoi = irradiance_perhour_l2;
+%     end
+%     for j = 1:40
+%         for t = 1:8760
+%             Isc_25C = Isc_stc*(G_aoi/G_stc);    %A
+%             Voc_25C = Voc_stc + ((n*k_b*Ta)/q)*log(G_aoi/G_stc)*n_mod;       %V
+%             Pmpp_25C = FF*Voc_25C*Isc_25C;      %W
+%             eff_25C = Pmpp_25C/(A_mod*G_aoi);   %efficiency at 25 C
+%             eff_Tm = eff_25C*(1 + k*(Tm(j,t) - Ta)); %efficiency at module temp
+%             if i == 1
+%                 P_DC1(j,t) = eff_Tm*A_mod*G_aoi;          %DC output before BoS [W]
+%             else
+%                 P_DC2(j,t) = eff_Tm*A_mod*G_aoi;  
+%             end
+%         end
+%     end
+% end
 
-%calculations
-G_aoi = irr_1_p*1e6;       %PLACEHOLDER - should be exact irradiation on selected modules
-                           %calculate average irradiation on all modules selected?
-G_stc = 1000*8760;      %Wh/m2
-Isc_25C = Isc_stc*(G_aoi/G_stc);    %A
-Voc_25C = Voc_stc + ((n*k_b*Ta)/q)*log(G_aoi/G_stc)*n_mod;       %V
-Pmpp_25C = FF*Voc_25C*Isc_25C;      %W
-eff_25C = Pmpp_25C/(A_mod*G_aoi);   %efficiency at 25 C
-eff_Tm = eff_25C*(1 + k*(Tm - Ta)); %efficiency at module temp
-P_DC = eff_Tm*A_mod*G_aoi;          %annual DC output before BoS [W]
-P_STC = 1000*A_mod;                %W
-DCY = P_DC/P_STC;
+
 
 
