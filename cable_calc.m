@@ -37,9 +37,20 @@ R_Al = 1/sigma_Al * Ltot./A; % Resistance of Aluminium cable [Ohms]
 Ploss_Cu = R_Cu * Imax^2;
 Ploss_Al = R_Al * Imax^2;
 
-eff_Cu = Pdc./(Pdc+Ploss_Al);
+eff_Cu = Pdc./(Pdc+Ploss_Cu);
 eff_Al = Pdc./(Pdc+Ploss_Al);
 
 %% AC cables
 
+V_grid = 220; %Voltage of the grid in Chile
+PAC = 1.52e4;
+IAC = PAC/V_grid;
 L_ac = 100; %[m] of cable from inverter to AC grid connection
+
+A_ac = 10;
+
+Rac_Cu = 1/sigma_Cu * L_ac./A_ac; % Resistance of Copper cable [Ohms]
+
+Ploss_Cu = 2* Rac_Cu * Imax^2;
+
+eff_Cu = Pdc./(P+Ploss_Cu);
