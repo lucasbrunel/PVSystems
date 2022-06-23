@@ -40,13 +40,14 @@ if plotting
     y_hours = 1:8760;
     fig1 = figure('Position',[680 497 743 481]);
     ax1 = axes(fig1);
-    p1 = plot(y_hours,load_profile1/1e3,'LineWidth',1.3);
+    %%%p1 = plot(y_hours,load_profile1/1e3,'LineWidth',1.3);
     hold on
-    p2 = plot(y_hours,load_profile2/1e3,'LineWidth',1.3);
+    %%%p2 = plot(y_hours,load_profile2/1e3,'LineWidth',1.3);
     p3 = plot(y_hours,load_profile3/1e3,'LineWidth',1.3);
        
-    legend(ax1,[p1,p2,p3],{'Load profile 1','Load profile 2',...
-        'Load profile 3'},'Location','southoutside','Orientation','horizontal');
+    %%%legend(ax1,[p1,p2,p3],{'Load profile 1','Load profile 2',...
+    %%%    'Load profile 3'},'Location','southoutside','Orientation','horizontal');
+    
     ax1.YLabel.String = 'Electricity demand (kW)';
     ax1.YLabel.FontWeight = 'Bold';
     ax1.XLim = [0 8760];
@@ -59,6 +60,7 @@ if plotting
     ax1.Box = 'on';
     ax1.LineWidth = 1.2;
     ax1.FontName = 'Calibri';
+    
     %Monthly load demand plot
     lp1_m = getMonthlyLP(load_profile1);
     lp2_m = getMonthlyLP(load_profile2);
@@ -66,12 +68,21 @@ if plotting
     y_months = 1:12;
     fig2 = figure('Position',[680 497 743 481]);
     ax2 = axes(fig2);
-    p4 = bar(ax2,y_months,[lp1_m,lp2_m,lp3_m]/1e6);
-    p4(1).EdgeAlpha = 0;
-    p4(2).EdgeAlpha = 0;
-    p4(3).EdgeAlpha = 0;
-    legend(ax2,{'Load profile 1','Load profile 2','Load profile 3'},...
-    'Location','southoutside','Orientation','horizontal'); 
+    %%%p4 = bar(ax2,y_months,[lp1_m,lp2_m,lp3_m]/1e6);
+    
+    %Delete this
+    p4 = bar(ax2,y_months,lp3_m/1e6);
+    
+    %%%p4(1).EdgeAlpha = 0;
+    %%%p4(2).EdgeAlpha = 0;
+    %%%p4(3).EdgeAlpha = 0;
+    
+    %Delete this
+    p4.EdgeAlpha = 0;
+    
+    %%%legend(ax2,{'Load profile 1','Load profile 2','Load profile 3'},...
+    %%%'Location','southoutside','Orientation','horizontal'); 
+
     ax2.YLabel.String = 'Electricity demand (MWh)';
     ax2.YLabel.FontWeight = 'Bold';
     ax2.XTickLabel = {'Jan','Feb','Mar','Apr','May','Jun','Jul', ...
@@ -81,6 +92,9 @@ if plotting
     ax2.Box = 'on';
     ax2.LineWidth = 1.2;
     ax2.FontName = 'Calibri';
+    
+    %Delete this
+    print(gcf,'monthly_demand','-dpng','-r500')
 end
 end
 

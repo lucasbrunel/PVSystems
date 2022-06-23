@@ -5,12 +5,18 @@ Isc = 9.46;
 Voc = 39.56;
 Pdc = 1.87e7; % Wh
 
+%% Ampacity req
 Th = 35.3; %Max Ambient Temperature; [C]
-T0 = 33; %Correction factor (adder) for sun exposed cable [C]
+T0 = 22; %Correction factor (adder) for sun exposed cable [C]
 Ttot = Th + T0;
+F1 = 0.71;
+F2 = 1;
 
+max_ISC = (F1*F2*98)/1.56;
+
+%% Array setup
 Nm = 8; % Number of modules per string (series)
-Nstr = 6; % Number of strings (parallel)
+Nstr = 7; % Number of strings (parallel)
 Linv = 17; % Length of cable from modules to inverter
 Lmm = 1; % Distance between series connection of modules
 Lstr = 1.7; % Distance between strongs connetcted in parallel
@@ -22,7 +28,7 @@ Exposed_cable = 2*Lstr*(Nstr-1) + Lrt; % Amount of cable exposed to the sun
 
 Ltot = LcableMM + LcableStrStr; % Total length of cabling required
 
-Imax = Isc*Nstr*1.25*1.25; % Max current which can occur with safety factors.
+Imax = (Isc*Nstr*1.25*1.25)/(F1*F2); % Max current which can occur with safety factors.
 Vmax = Voc*Nm; % Max voltage which can occur in the system
 
 sigma_Cu = 59.6; % Conductivity of copper [S m / mm^2]
@@ -44,13 +50,15 @@ eff_Al = Pdc./(Pdc+Ploss_Al);
 
 V_grid = 220; %Voltage of the grid in Chile
 PAC = 1.52e4;
-IAC = PAC/V_grid;
+IAC = sqrt(3)*PAC/V_grid*3;
 L_ac = 100; %[m] of cable from inverter to AC grid connection
 
-A_ac = 10;
+A_ac = 6;
 
 Rac_Cu = 1/sigma_Cu * L_ac./A_ac; % Resistance of Copper cable [Ohms]
 
-Ploss_Cu = 2* Rac_Cu * Imax^2;
+Pacloss_Cu = 2* Rac_Cu * Imax^2;
 
-eff_Cu = Pdc./(P+Ploss_Cu);
+eff_Cu_ac = PAC/(PAC+Pacloss_Cu);
+
+%If PDC is greater than 5kW then we need three phase (3 phase + neutral)
