@@ -121,6 +121,7 @@ A_mod = 1.64*0.992;        %m2
 
 %DC yield calculation
 %constants
+n_mod = 56;
 n = 1.2;    %ideality factor (CHECK THIS)
 k_b = 1.38e-23; %boltzmann
 q = 1.6e-19;     %charge e-

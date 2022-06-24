@@ -4,7 +4,8 @@ Np = 4; %Number of parallel strings
 Ntot = Ns*Np; %Total number of panels
 
 Vdc = 31.9*Ns;
-Pdc = 280*Ntot;
+%Pdc = 280*Ntot;
+Pdc = P_DC_tot;
 
 %Inverter Parameters
 Pac0 = 42000;
@@ -19,7 +20,20 @@ C3 = 2.13e-04;
 A = Pdc0*(1+C1*(Vdc-Vdc0));
 B = Ps0*(1+C2*(Vdc-Vdc0));
 C = C0*(1+C3*(Vdc-Vdc0));
-Pac = ((Pac0/(A-B))-C*(A-B))*(Pdc-B)+C*((Pdc-B)^2);
+Pac = zeros(1,8760);
+for i = 1:8760
+    Pac(i) = ((Pac0/(A-B))-C*(A-B))*(Pdc(i)-B)+C*((Pdc(i)-B)^2);
+    if Pac(i) < 0
+        Pac(i) = 0;
+    end
+end
 
-ACeff = Pac/Pdc *100;
+Output_final = sum(Pac); % THIS IS THE FINAL OUTPUT OF THE ENTIRE SYSTEM!!!
+
+effy = Output_final/P_DC_annual;
+
+ACeff = zeros(1,8760);
+for i =1:8760
+    ACeff(i) = Pac(i)/Pdc(i) *100;
+end
 
