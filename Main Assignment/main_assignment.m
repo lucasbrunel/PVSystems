@@ -243,7 +243,7 @@ A_mod = 1.64*0.992;        %m2
 
 %% Task 4
 %System Losses
-eff_inv = 0.91;
+%eff_inv = 0.91; % COMMENTED BECAUSE WE DO THIS EFFICIENCY LATER
 eff_cable = 0.99;
 eff_system = eff_mod_est*eff_inv*eff_cable;
 
