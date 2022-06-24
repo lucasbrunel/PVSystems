@@ -15,8 +15,8 @@ F2 = 1;
 max_ISC = (F1*F2*98)/1.56;
 
 %% Array setup
-Nm = 8; % Number of modules per string (series)
-Nstr = 7; % Number of strings (parallel)
+Nm = 14; % Number of modules per string (series)
+Nstr = 4; % Number of strings (parallel)
 Linv = 17; % Length of cable from modules to inverter
 Lmm = 1; % Distance between series connection of modules
 Lstr = 1.7; % Distance between strongs connetcted in parallel
