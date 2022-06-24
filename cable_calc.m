@@ -31,7 +31,7 @@ Exposed_cable = 2*Lstr*(Nstr-1) + Lrt; % Amount of cable exposed to the sun
 
 Ltot = LcableMM + LcableStrStr; % Total length of cabling required
 
-Imax = (Isc*Nstr*1.25*1.25)/(F1*F2); % Max current which can occur with safety factors.
+Ampacity = (Isc*Nstr*1.25*1.25)/(F1*F2); % Max current which can occur with safety factors.
 Vmax = Voc*Nm; % Max voltage which can occur in the system
 
 sigma_Cu = 59.6; % Conductivity of copper [S m / mm^2]
@@ -43,7 +43,7 @@ A = 10;
 R_Cu = 1/sigma_Cu * Ltot./A; % Resistance of Copper cable [Ohms]
 %R_Al = 1/sigma_Al * Ltot./A; % Resistance of Aluminium cable [Ohms]
 
-Ploss_Cu = R_Cu * Imax^2;
+Ploss_Cu = R_Cu * Ampacity^2;
 %Ploss_Al = R_Al * Imax^2;
 
 eff_Cu = Pdc./(Pdc+Ploss_Cu);
@@ -60,10 +60,10 @@ A_ac = 6;
 
 Rac_Cu = 1/sigma_Cu * L_ac./A_ac; % Resistance of Copper cable [Ohms]
 
-Pacloss_Cu = 2* Rac_Cu * Imax^2;
+Pacloss_Cu = 2* Rac_Cu * Ampacity^2;
 
 %eff_Cu_ac = PAC/(PAC+Pacloss_Cu);
-eff_Cu_ac = 0.98;
+eff_Cu_ac = 0.99;
 
 %If PDC is greater than 5kW then we need three phase (3 phase + neutral)
 
@@ -107,5 +107,5 @@ end
 
 %This is the final power output including all losses: mismatch, thermal,
 %cabling and Inverter losses
-Pac_final = Pac_inv * eff_Cu * eff_Cu_ac;
+Pac_final = Pac_inv * eff_Cu * eff_Cu_ac * 0.98;
 
