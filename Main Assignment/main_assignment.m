@@ -227,6 +227,17 @@ for i = 1:8
     end
 end
 
+% m_ix1 = [1,2,6,7,11,12,16,17,21,22,26,27,31,32,36,37];
+% m_ix2 = [1:40];
+% %m_ix1_inv = m_ix2;
+% %m_ix1_inv(m_ix1) = 0;
+% plotModulesOnRoof('landscape_modules', 2, m_ix2, 'irradiance', irr_2_l, cb_limits);
+% hold on
+% plotModulesOnRoof('landscape_modules', 1, m_ix1, 'irradiance', irr_1_l, cb_limits);
+
+
+
+
 
 %% Task 3 - PV Module Selection
 %Solar Tech TS60-6M3-280S 

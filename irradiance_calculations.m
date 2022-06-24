@@ -94,11 +94,13 @@ for i = 1:2
     end
 end
 
+
 %Temp calc
 a = -3.47;
 b = -0.0594;
 windspeed = meteodata.FF;
 T_a = meteodata.Ta;
+T_a2 = meteodata2(:,10);
 T_m1 = zeros(40,8760);
 T_m2 = zeros(40,8760);
 for i = 1:40
@@ -121,6 +123,7 @@ A_mod = 1.64*0.992;        %m2
 
 %DC yield calculation
 %constants
+n_mod = 56; 
 n = 1.2;    %ideality factor (CHECK THIS)
 k_b = 1.38e-23; %boltzmann
 q = 1.6e-19;     %charge e-
@@ -167,29 +170,31 @@ for i = 1:2
 end
 
 P_DC_tot = zeros(1,8760);
-roof2_mat = zeros(1,40);
-roof2_mat(6) = 1;
-roof2_mat(11) = 1;
-roof2_mat(16) = 1;
-roof2_mat(21) = 1;
-roof2_mat(26) = 1;
-roof2_mat(31) = 1;
-roof2_mat(36) = 1;
-roof2_mat(7) = 1;
-roof2_mat(12) = 1;
-roof2_mat(17) = 1;
-roof2_mat(22) = 1;
-roof2_mat(27) = 1;
-roof2_mat(32) = 1;
-roof2_mat(37) = 1;
+roof1_mat = zeros(1,40);
+roof1_mat(1) = 1;
+roof1_mat(6) = 1;
+roof1_mat(11) = 1;
+roof1_mat(16) = 1;
+roof1_mat(21) = 1;
+roof1_mat(26) = 1;
+roof1_mat(31) = 1;
+roof1_mat(36) = 1;
+roof1_mat(2) = 1;
+roof1_mat(7) = 1;
+roof1_mat(12) = 1;
+roof1_mat(17) = 1;
+roof1_mat(22) = 1;
+roof1_mat(27) = 1;
+roof1_mat(32) = 1;
+roof1_mat(37) = 1;
 for t = 1:8760
-    P_DC_tot = sum(P_DC1,1) + sum(roof2_mat*P_DC2,1);
+    P_DC_tot = sum(P_DC2,1) + sum(roof1_mat*P_DC1,1);
 end
 P_DC_annual = sum(P_DC_tot);
 
 P_DC_tot_25C = zeros(1,8760);
 for t = 1:8760
-    P_DC_tot_25C = sum(P_DC1_25C,1) + sum(roof2_mat*P_DC2,1);
+    P_DC_tot_25C = sum(P_DC2_25C,1) + sum(roof1_mat*P_DC1,1);
 end
 P_DC_annual_25C = sum(P_DC_tot_25C);
 
